@@ -2,6 +2,9 @@ const FeedParser = require("feedparser");
 const request = require("request");
 const twitter_credentials = require("./twitter-api-credentials");
 const Twitter = require("twitter");
+const airbrake_credentials = require("./airbrake-credentials");
+const AirbrakeClient = require("airbrake-js");
+let airbrake = new AirbrakeClient(airbrake_credentials);
 
 let feedparser = new FeedParser();
 let feed = request("https://airbrake.io/blog/feed/atom");
@@ -50,31 +53,63 @@ feedparser.on("readable", function() {
  *
  * @param article Article to be tweeted.
  */
-function tweetArticle(article) {
-  if (article == null) return;
+// function tweetArticle(article) {
+//   if (article == null) return;
+//   twitter.post(
+//     "statuses/update",
+//     {
+//       status: `${article.title} ${article.link}`
+//     },
+//     function(error, tweet, response) {
+//       if (error) {
+//         console.log(error);
+//         throw error;
+//       }
+//       console.log("---- TWEETED ARTICLE ----");
+//       console.log(tweet);
+//     }
+//   );
+// }
+
+// /**
+//  * Tweet a random Article.
+//  */
+// function tweetRandomArticle() {
+//   // Tweet a random article.
+//   tweetArticle(articles[Math.floor(Math.random() * articles.length)]);
+// }
+
+/**
+ * Tweet the passed string message.
+ *
+ * @param message String to be tweeted.
+ */
+function tweet(message) {
+  if (message === null || message === "") return;
   twitter.post(
     "statuses/update",
     {
-      status: `${article.title} ${article.link}`
+      status: message
     },
-    function(error, tweet, response) {
-      if (error) {
-        console.log(error);
-        throw error;
-      }
-      console.log("---- TWEETED ARTICLE ----");
-      console.log(tweet);
-    }
+    tweetCallback
   );
 }
-
 /**
- * Tweet a random Article.
+ * Callback for tweet attempts.
+ *
+ * @param error Caught error.
+ * @param tweet Tweet.
+ * @param response Response.
  */
-function tweetRandomArticle() {
-  // Tweet a random article.
-  tweetArticle(articles[Math.floor(Math.random() * articles.length)]);
+function tweetCallback(error, tweet, response) {
+  if (error) {
+    console.log(error);
+    throw new Error(error[0].message);
+  }
+  console.log("---- TWEETED ----");
+  console.log(tweet);
 }
+tweet("Hello world again.");
 // Perform a test tweet.
 // twitter.post(
 //   "statuses/update",
