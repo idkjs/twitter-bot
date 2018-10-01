@@ -53,31 +53,31 @@ feedparser.on("readable", function() {
  *
  * @param article Article to be tweeted.
  */
-// function tweetArticle(article) {
-//   if (article == null) return;
-//   twitter.post(
-//     "statuses/update",
-//     {
-//       status: `${article.title} ${article.link}`
-//     },
-//     function(error, tweet, response) {
-//       if (error) {
-//         console.log(error);
-//         throw error;
-//       }
-//       console.log("---- TWEETED ARTICLE ----");
-//       console.log(tweet);
-//     }
-//   );
-// }
+function tweetArticle(article) {
+  if (article == null) return;
+  twitter.post(
+    "statuses/update",
+    {
+      status: `${article.title} ${article.link}`
+    },
+    function(error, tweet, response) {
+      if (error) {
+        console.log(error);
+        throw error;
+      }
+      console.log("---- TWEETED ARTICLE ----");
+      console.log(tweet);
+    }
+  );
+}
 
-// /**
-//  * Tweet a random Article.
-//  */
-// function tweetRandomArticle() {
-//   // Tweet a random article.
-//   tweetArticle(articles[Math.floor(Math.random() * articles.length)]);
-// }
+/**
+ * Tweet a random Article.
+ */
+function tweetRandomArticle() {
+  // Tweet a random article.
+  tweetArticle(articles[Math.floor(Math.random() * articles.length)]);
+}
 
 /**
  * Tweet the passed string message.
